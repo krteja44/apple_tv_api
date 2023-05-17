@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from environs import Env
+import os
 
 env = Env()
 env.read_env()
@@ -60,7 +61,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'middlewares.authentication_middleware.AuthMiddleware'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'authentication.jwt_backend.JWTAuthentication',
+    ],
+}
 
 ROOT_URLCONF = 'pingfed_django_poc.urls'
 
@@ -89,7 +97,7 @@ WSGI_APPLICATION = 'pingfed_django_poc.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -140,3 +148,6 @@ PINGFED_PICKUP_URL = env('PINGFED_PICKUP_URL')
 PINGFED_USERNAME = env('PINGFED_USERNAME')
 PINGFED_PASSWORD = env('PINGFED_PASSWORD')
 PINGFED_INSTANCE = env('PINGFED_INSTANCE')
+
+REDIS_URL = env('REDIS_URL')
+TOKEN_EXPIRY = env('TOKEN_EXPIRY')
